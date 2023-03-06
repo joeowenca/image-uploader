@@ -1,14 +1,12 @@
 import fs from "fs";
 import path from "path";
 
-function readDirectory() {
-  const arg = process.argv[2];
-  const requestPath = arg;
-  const fileTree = { name: path.basename(arg), type: "Directory", children: [] };
+function readDirectory(requestPath) {
+  const fileTree = { name: path.basename(requestPath), type: "Directory", children: [] };
 
   // currentPath is the path being scanned (eg. "C:\Users\Joe\Downloads")
   // currentDirectory is the JSON object that found files are pushed to
-  function createTree(currentPath, currentDirectory) {
+  function createFileTree(currentPath, currentDirectory) {
     // Get files in current path
     const files = fs.readdirSync(currentPath);
 
@@ -32,12 +30,15 @@ function readDirectory() {
           children: [] 
         };
         currentDirectory.children.push(subDirectory);
-        createTree(path.join(currentPath, file), subDirectory);
+
+        // Run recursively for each sub directory
+        createFileTree(path.join(currentPath, file), subDirectory);
       }
     })
   }
 
-  createTree(requestPath, fileTree);
+  createFileTree(requestPath, fileTree);
+  return fileTree;
 }
 
 export default readDirectory;
