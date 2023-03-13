@@ -1,16 +1,16 @@
 import fs from "fs";
 import path from "path";
-
-function readDirectory(requestPath) {
-  const fileTree = { name: path.basename(requestPath), type: "Directory", children: [] };
-
-  // currentPath is the path being scanned (eg. "C:\Users\Joe\Downloads")
-  // currentDirectory is the JSON object that found files are pushed to
+// requestPath: The starting file path to scan
+// fileTree: The file tree in JSON
+function readDirectory(requestPath, fileTree) {
+  // currentPath: The path being scanned (eg. "C:\Users\Joe\Downloads")
+  // currentDirectory: The JSON object that found files are pushed to
   function createFileTree(currentPath, currentDirectory) {
     // Get files in current path
     const files = fs.readdirSync(currentPath);
 
     files.map(file => {
+      // Get file data
       const filePath = path.join(currentPath, file);
       const fileType = fs.statSync(filePath);
 
@@ -21,6 +21,8 @@ function readDirectory(requestPath) {
           type: "File", 
           path: path.join(currentPath, file),
         })
+
+        console.log("Pushed to local manifest: " + file);
       } else if(fileType.isDirectory()) {
         // Create new subDirectory object to push to the current directory
         const subDirectory = { 
@@ -38,7 +40,6 @@ function readDirectory(requestPath) {
   }
 
   createFileTree(requestPath, fileTree);
-  return fileTree;
 }
 
 export default readDirectory;
