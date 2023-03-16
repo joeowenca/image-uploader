@@ -10,7 +10,7 @@ const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 const requestURL = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/images/v1`;
 
 // Upload image via Cloudflare API
-async function cloudflareAPI(file) {
+async function cloudflareUpload(file) {
   // Read file from path
   const fileData = fs.readFileSync(file.path);
   const image = new Blob([fileData], { type: 'image/jpeg' });
@@ -30,4 +30,4 @@ async function cloudflareAPI(file) {
   return await response.json();
 }
 
-export default cloudflareAPI;
+export default cloudflareUpload;
