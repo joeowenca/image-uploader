@@ -15,14 +15,18 @@ function readDirectory(requestPath, fileTree) {
       const fileType = fs.statSync(filePath);
 
       if(fileType.isFile()) {
-        // Push found files to current directory
-        currentDirectory.children.push({ 
-          name: file, 
-          type: "File", 
-          path: path.join(currentPath, file),
-        })
-
-        console.log("Pushed to local manifest: " + file);
+        // Only push jpegs
+        if(path.extname(file) === ".jpg" || path.extname(file) === ".jpeg") {
+          // Push found files to current directory
+          currentDirectory.children.push({ 
+            name: file, 
+            type: "File", 
+            path: path.join(currentPath, file),
+          })
+          console.log("Pushed to local manifest: " + file);
+        } else {
+          console.log("Skipped as file is not a JPEG");
+        }
       } else if(fileType.isDirectory()) {
         // Create new subDirectory object to push to the current directory
         const subDirectory = { 
