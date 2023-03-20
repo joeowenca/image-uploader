@@ -1,22 +1,34 @@
-async function compareManifest(localManifest, currentManifest) {
-  const localImages = [];
-  const currentImages = [];
-  
-  async function generateFlatList(json, array) {
-    await json.children.map(item => {
-      if(item.type === "File" || item.type === "Image") {
-        array.push(item.name);
-      } else if(item.type === "Directory" || item.type === "Category") {
-        generateFlatList(item, array);
-      }
-    });
+function compareManifest(previousManifest, currentManifest) {
+
+  // Convert the input manifest into a flat array
+  function generateFlatList(manifest) {
+    const flatList = [];
+
+    // Recursively search for images and push them to the array
+    function recursiveSearch(manifest, flatList) {
+      manifest.children.map(item => {
+        if (item.type === "File" || item.type === "Image") {
+          flatList.push(item.name);
+        } else {
+          recursiveSearch(item, array);
+        }
+      });
+    }
+
+    recursiveSearch(manifest, flatList);
+
+    return flatList;
   }
 
-  generateFlatList(localManifest, localImages);
-  generateFlatList(currentManifest, currentImages);
+  // Flat lists
+  const currentImages = generateFlatList(currentManifest);
+  const previousImages = generateFlatList(previousManifest);
 
-  const imagesToUpload = localImages.concat(currentImages).filter(image => !currentImages.includes(image));
-  const imagesToDelete = currentImages.concat(localImages).filter(image => !localImages.includes(image));
+  // Compare current images to previous images and return what to upload and delete
+  return {
+    toUpload: currentImages.filter(image => !previousImages.includes(image)),
+    toDelete: previousImages.filter(image => !currentImages.includes(image))
+  }
 }
 
 export default compareManifest;

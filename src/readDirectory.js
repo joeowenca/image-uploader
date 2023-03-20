@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+
 // requestPath: The starting file path to scan
 // fileTree: The file tree in JSON
 function readDirectory(requestPath, fileTree) {
@@ -15,7 +16,7 @@ function readDirectory(requestPath, fileTree) {
       const fileType = fs.statSync(filePath);
 
       if(fileType.isFile()) {
-        // Only push jpegs
+        // Only push JPEGs
         if(path.extname(file) === ".jpg" || path.extname(file) === ".jpeg") {
           // Push found files to current directory
           currentDirectory.children.push({ 
