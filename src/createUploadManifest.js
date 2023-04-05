@@ -1,12 +1,18 @@
 import fs from "fs";
 import path from "path";
+import generateFlatList from "./generateFlatList.js";
 
 // requestPath: The starting file path to scan
-// fileTree: The file tree in JSON
-function readDirectory(requestPath, fileTree) {
+async function createUploadManifest(requestPath) {
+  const uploadManifest = {
+    name: path.basename(requestPath), 
+    type: "Category", 
+    children: []
+  };
+
   // currentPath: The path being scanned (eg. "C:\Users\Joe\Downloads")
-  // currentDirectory: The JSON object that found files are pushed to
-  function createFileTree(currentPath, currentDirectory) {
+  // currentCategory: The JSON object that found images are pushed to
+  function recursiveSearch(currentPath, currentCategory) {
     // Get files in current path
     const files = fs.readdirSync(currentPath);
 
@@ -18,10 +24,10 @@ function readDirectory(requestPath, fileTree) {
       if(fileType.isFile()) {
         // Only push JPEGs
         if(path.extname(file) === ".jpg" || path.extname(file) === ".jpeg") {
-          // Push found files to current directory
-          currentDirectory.children.push({ 
+          // Push found images to current category
+          currentCategory.children.push({ 
             name: file, 
-            type: "File", 
+            type: "Image", 
             path: path.join(currentPath, file),
           })
           console.log("Pushed to local manifest: " + file);
@@ -29,22 +35,24 @@ function readDirectory(requestPath, fileTree) {
           console.log("Skipped as file is not a JPEG");
         }
       } else if(fileType.isDirectory()) {
-        // Create new subDirectory object to push to the current directory
-        const subDirectory = { 
+        // Create new subCategory object to push to the current category
+        const subCategory = { 
           name: file, 
-          type: "Directory", 
+          type: "Category", 
           path: path.join(currentPath, file), 
           children: [] 
         };
-        currentDirectory.children.push(subDirectory);
+        currentCategory.children.push(subCategory);
 
-        // Run recursively for each sub directory
-        createFileTree(path.join(currentPath, file), subDirectory);
+        // Run recursively for each sub category
+        recursiveSearch(path.join(currentPath, file), subCategory);
       }
     })
   }
 
-  createFileTree(requestPath, fileTree);
+  recursiveSearch(requestPath, uploadManifest);
+
+  return uploadManifest;
 }
 
-export default readDirectory;
+export default createUploadManifest;

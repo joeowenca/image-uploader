@@ -1,17 +1,13 @@
 import fs from "fs";
-import path from "path";
-import readDirectory from "./src/readDirectory.js";
-import uploadImages from "./src/upload/uploadImages.js";
-
-// Starting file path
-const requestPath = process.argv[2];
-
+import createUploadManifest from "./src/createUploadManifest.js";
+import uploadImages from "./src/uploadImages.js";
+/* 
 // Local images to be uploaded
 const localManifest = { 
   name: path.basename(requestPath), 
   type: "Directory", 
   children: [] 
-};
+}; */
 
 // Public images for production use
 const publicManifest = { 
@@ -20,7 +16,8 @@ const publicManifest = {
   children: [] 
 };
 
-readDirectory(requestPath, localManifest);
+const uploadManifest = await createUploadManifest(process.argv[2]);
 
-await uploadImages(localManifest, publicManifest);
+await uploadImages(uploadManifest, publicManifest);
+
 fs.writeFileSync('manifest.json', JSON.stringify(publicManifest, null, 2));
