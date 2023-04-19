@@ -1,8 +1,7 @@
 import path from "path";
 
 // data: Image data
-// category: Category to add image data to
-function updateManifest(data, category) {
+function compileImageInfo(data) {
   let publicVariant, thumbnailVariant;
 
   // Organize public and Thumbnail variants
@@ -14,8 +13,8 @@ function updateManifest(data, category) {
     }
   })
 
-  // Organized imageData object to push to manifest
-  const imageData = {
+  // Return image info object
+  return {
     id : data.result.id,
     name: data.result.filename,
     type: "Image",
@@ -24,10 +23,6 @@ function updateManifest(data, category) {
       thumbnail: thumbnailVariant
     }
   };
-
-  // Push to manifest
-  category.children.push(imageData);
-  console.log("Pushed to public manifest: " + imageData.name);
 }
 
-export default updateManifest;
+export default compileImageInfo;

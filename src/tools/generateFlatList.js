@@ -2,7 +2,7 @@
 function generateFlatList(manifest) {
   const flatList = [];
 
-  // Recursively search for images and push them to the array
+  // Recursively search for images and push them to the flatList
   function recursiveSearch(manifest, flatList) {
     manifest.children.map(item => {
       if (item.type === "Image") {

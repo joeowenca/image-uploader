@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import generateFlatList from "./generateFlatList.js";
 
 // requestPath: The starting file path to scan
 async function createUploadManifest(requestPath) {
