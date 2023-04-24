@@ -1,7 +1,7 @@
 import path from "path";
 
-// data: Image data
-function compileImageInfo(data) {
+// Take the image data and organize it into a friendly object
+function compileImageInfo(data, image) {
   let publicVariant, thumbnailVariant;
 
   // Organize public and Thumbnail variants
@@ -15,9 +15,11 @@ function compileImageInfo(data) {
 
   // Return image info object
   return {
-    id : data.result.id,
     name: data.result.filename,
     type: "Image",
+    id: image.id,
+    categoryId: image.categoryId,
+    cloudflareId : data.result.id,
     variants: {
       public: publicVariant,
       thumbnail: thumbnailVariant

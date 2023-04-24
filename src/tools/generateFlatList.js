@@ -1,19 +1,24 @@
 // Convert the input manifest into a flat array
-function generateFlatList(manifest) {
+function generateFlatList(category) {
   const flatList = [];
 
-  // Recursively search for images and push them to the flatList
-  function recursiveSearch(manifest, flatList) {
-    manifest.children.map(item => {
+  // Return blank if category children is undefined
+  if (category.children === undefined) {
+    return [];
+  }
+
+  // Recursively search for images and return a flat list
+  function recursiveSearch(category) {
+    category.children.map(item => {
       if (item.type === "Image") {
-        flatList.push(item.name);
+        flatList.push(item);
       } else {
-        recursiveSearch(item, flatList);
+        recursiveSearch(item);
       }
     });
   }
 
-  recursiveSearch(manifest, flatList);
+  recursiveSearch(category);
 
   return flatList;
 }

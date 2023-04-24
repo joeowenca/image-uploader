@@ -1,41 +1,19 @@
-import cloudflareUpload from "./cloudflare/cloudflareUpload.js";
-import compileImageInfo from "./compileImageInfo.js"
+import cloudflareUpload from "./cloudflareAPI/cloudflareUpload.js";
+import compileImageInfo from "./tools/compileImageInfo.js"
 
 // Organize categories and upload images
-async function uploadImages(files) {
+async function uploadImages(images) {
 
-  const uploadedImages = { 
-    name: "Images",
-    type: "Category",
-    children: [] 
-  };
+  return images.map(async (image) => {
+    if (image.type === "Image") {
+      // Upload image
+      const data = await cloudflareUpload(image);
+      console.log("Uploaded image: " + data.result.filename);
 
-  // Recursively search the category and upload found images
-  async function recursiveSearch(files, category) {
-    await Promise.all(files.children.map(async (file) => {
-      if (file.type === "Image") {
-          // Upload image
-          const data = await cloudflareUpload(file);
-          // Once uploaded, push image info to the current category
-          category.children.push(compileImageInfo(data));
-          console.log("Pushed to public manifest: " + data.result.filename);
-      } else if (file.type === "Category") {
-        // Create new category based on directory
-        const newCategory = { 
-          name: file.name, 
-          type: "Category",
-          children: [] 
-        };
-        
-        category.children.push(newCategory);
-        await recursiveSearch(file, newCategory);
-      }
-    }));
-  }
-
-  await recursiveSearch(files, uploadedImages);
-
-  return uploadedImages;
+      // Once uploaded, push image info to the current category
+      return compileImageInfo(data, image);
+    }
+  });
 }
 
 export default uploadImages;

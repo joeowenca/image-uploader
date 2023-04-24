@@ -1,9 +1,11 @@
 import fs from "fs";
 import path from "path";
+import { v4 as uuid } from 'uuid';
 
 // requestPath: The starting file path to scan
-async function createUploadManifest(requestPath) {
-  const uploadManifest = {
+async function getCurrentImages(requestPath) {
+  const currentImages = {
+    id: uuid(),
     name: path.basename(requestPath), 
     type: "Category", 
     children: []
@@ -24,18 +26,21 @@ async function createUploadManifest(requestPath) {
         // Only push JPEGs
         if(path.extname(file) === ".jpg" || path.extname(file) === ".jpeg") {
           // Push found images to current category
-          currentCategory.children.push({ 
+          currentCategory.children.push({
+            id: uuid(),
+            categoryId: currentCategory.id,
             name: file, 
             type: "Image", 
             path: path.join(currentPath, file),
           })
-          console.log("Pushed to local manifest: " + file);
+          console.log("Found file: " + file);
         } else {
           console.log("Skipped as file is not a JPEG");
         }
       } else if(fileType.isDirectory()) {
         // Create new subCategory object to push to the current category
-        const subCategory = { 
+        const subCategory = {
+          id: uuid(),
           name: file, 
           type: "Category", 
           path: path.join(currentPath, file), 
@@ -49,9 +54,9 @@ async function createUploadManifest(requestPath) {
     })
   }
 
-  recursiveSearch(requestPath, uploadManifest);
+  recursiveSearch(requestPath, currentImages);
 
-  return uploadManifest;
+  return currentImages;
 }
 
-export default createUploadManifest;
+export default getCurrentImages;
