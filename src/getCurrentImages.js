@@ -1,11 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { v4 as uuid } from 'uuid';
 
 // requestPath: The starting file path to scan
 async function getCurrentImages(requestPath) {
   const currentImages = {
-    id: uuid(),
     name: path.basename(requestPath), 
     type: "Category", 
     children: []
@@ -27,10 +25,9 @@ async function getCurrentImages(requestPath) {
         if(path.extname(file) === ".jpg" || path.extname(file) === ".jpeg") {
           // Push found images to current category
           currentCategory.children.push({
-            id: uuid(),
-            categoryId: currentCategory.id,
             name: file, 
             type: "Image", 
+            id: `${file}-${currentCategory.name}`,
             path: path.join(currentPath, file),
           })
           console.log("Found file: " + file);
@@ -40,7 +37,6 @@ async function getCurrentImages(requestPath) {
       } else if(fileType.isDirectory()) {
         // Create new subCategory object to push to the current category
         const subCategory = {
-          id: uuid(),
           name: file, 
           type: "Category", 
           path: path.join(currentPath, file), 

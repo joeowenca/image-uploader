@@ -18,8 +18,8 @@ function compileImageInfo(data, image) {
     name: data.result.filename,
     type: "Image",
     id: image.id,
-    categoryId: image.categoryId,
     cloudflareId : data.result.id,
+    categoryName: image.categoryName,
     variants: {
       public: publicVariant,
       thumbnail: thumbnailVariant
