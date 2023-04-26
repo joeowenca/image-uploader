@@ -1,5 +1,5 @@
-async function createImagesManifest(uploadedImages, currentImages) {
-  const imagesManifest = {
+async function createUploadedManifest(uploadedImages, currentImages) {
+  const uploadedManifest = {
     name: "Uploaded images",
     type: "Category",
     children: []
@@ -26,9 +26,9 @@ async function createImagesManifest(uploadedImages, currentImages) {
     });
   }
 
-  recursiveSearch(currentImages, imagesManifest);
+  recursiveSearch(currentImages, uploadedManifest);
 
-  return imagesManifest;
+  return uploadedManifest;
 }
 
-export default createImagesManifest;
+export default createUploadedManifest;

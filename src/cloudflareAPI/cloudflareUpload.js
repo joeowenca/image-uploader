@@ -11,23 +11,34 @@ const requestURL = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/
 
 // Upload image via Cloudflare API
 async function cloudflareUpload(file) {
-  // Read file from path
-  const fileData = fs.readFileSync(file.path);
-  const image = new Blob([fileData], { type: 'image/jpeg' });
+  try {
+    // Read file from path
+    const fileData = fs.readFileSync(file.path);
+    const image = new Blob([fileData], { type: 'image/jpeg' });
 
-  // Add file to FormData
-  const formData = new FormData();
-  formData.append('file', image, file.name);
+    // Add file to FormData
+    const formData = new FormData();
+    formData.append('file', image, file.name);
 
-  // Upload FormData to Cloudflare API
-  const response = await fetch(requestURL, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${API_TOKEN}`
-    },
-    body: formData
-  });
-  return await response.json();
+    // Upload FormData to Cloudflare API
+    const response = await fetch(requestURL, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${API_TOKEN}`
+      },
+      body: formData
+    });
+
+    // Throw error if status code is not within the 200 range
+    if (!response.ok) {
+      throw new Error(`Failed to upload file: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error uploading file ${error}`);
+    throw error;
+  }
 }
 
 export default cloudflareUpload;

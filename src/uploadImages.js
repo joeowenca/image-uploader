@@ -4,6 +4,10 @@ import compileImageInfo from "./tools/compileImageInfo.js"
 // Organize categories and upload images
 async function uploadImages(images) {
 
+  if(images.length === 0) {
+    console.log("No new images to upload.");
+  }
+
   return images.map(async (image) => {
     if (image.type === "Image") {
       // Upload image
