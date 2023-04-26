@@ -51,7 +51,7 @@ async function runImagePipeline() {
     const uploadedManifest = await createUploadedManifest(uploadedImages, currentManifest);
 
     // Merge uploadedManifest with currentManifest
-    const newCurrentManifest = await mergeManifests(uploadedManifest, currentManifest);
+    const newCurrentManifest = await mergeManifests(uploadedManifest, previousManifest);
 
     // Write manifest to file if it has changed
     if (JSON.stringify(newCurrentManifest) !== JSON.stringify(previousManifest)) {

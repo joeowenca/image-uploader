@@ -19,7 +19,6 @@ function compileImageInfo(data, image) {
     type: "Image",
     id: image.id,
     cloudflareId : data.result.id,
-    categoryName: image.categoryName,
     variants: {
       public: publicVariant,
       thumbnail: thumbnailVariant

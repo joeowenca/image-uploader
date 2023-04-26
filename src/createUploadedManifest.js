@@ -1,4 +1,5 @@
 async function createUploadedManifest(uploadedImages, currentImages) {
+
   const uploadedManifest = {
     name: "Uploaded images",
     type: "Category",
