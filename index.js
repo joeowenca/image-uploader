@@ -36,10 +36,10 @@ async function runImagePipeline() {
     const previousManifest = await importManifestFile("./manifest.json");
 
     // Get current images
-    const currentManifest = await getCurrentImages(process.argv[2]);
+    const currentImages = await getCurrentImages(process.argv[2]);
 
-    // Compare images
-    const filteredImages = await compareImages(previousManifest, currentManifest);
+    // Compare images and return a flat list of filtered images
+    const filteredImages = await compareImages(previousManifest, currentImages);
 
     // Upload images
     const uploadedImages = await uploadFilteredImages(filteredImages.toUpload);
@@ -48,17 +48,15 @@ async function runImagePipeline() {
     // const deletedImages = await deleteImages(filteredImages.toDelete);
 
     // Create manifest of images just uploaded
-    const uploadedManifest = await createUploadedManifest(uploadedImages, currentManifest);
+    const uploadedManifest = await createUploadedManifest(uploadedImages, currentImages);
 
     // Merge uploadedManifest with currentManifest
-    const newCurrentManifest = await mergeManifests(uploadedManifest, previousManifest);
+    const currentManifest = await mergeManifests(uploadedManifest, previousManifest);
 
     // Write manifest to file if it has changed
-    if (JSON.stringify(newCurrentManifest) !== JSON.stringify(previousManifest)) {
-      await writeManifestToFile(newCurrentManifest, previousManifest);
+    if (JSON.stringify(currentManifest) !== JSON.stringify(previousManifest)) {
+      await writeManifestToFile(currentManifest, previousManifest);
     }
-
-    console.log("Image pipeline completed successfully.");
 
   } catch (error) {
     console.error("Error in image pipeline: ", error);
