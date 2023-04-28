@@ -48,7 +48,7 @@ async function runImagePipeline() {
     await deleteImages(filteredImages.toDelete);
 
     // Create list of all images
-    const allUploadedImages = await combineAllImages(uploadedImages, previousManifest);
+    const allUploadedImages = combineAllImages(uploadedImages, previousManifest);
 
     // Create manifest of images just uploaded
     const currentManifest = await createUploadedManifest(allUploadedImages, localManifest);

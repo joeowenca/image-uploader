@@ -21,7 +21,8 @@ async function compareImages(previousImages, currentImages) {
 
   // If no previous images, just return the currentImagesList to upload
   return {
-    toUpload: currentImagesList
+    toUpload: currentImagesList,
+    toDelete: []
   }
 }
 
