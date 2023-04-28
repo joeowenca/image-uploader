@@ -6,7 +6,7 @@ async function deleteImages(images) {
   return images.map(async (image) => {
     if (image.type === "Image") {
       // Upload image
-      const data = await cloudflareDelete(image);
+      const data = await cloudflareDelete(image.cloudflareId);
 
       console.log("Deleted image: " + data.result.filename);
 

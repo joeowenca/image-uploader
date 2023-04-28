@@ -1,10 +1,10 @@
 import fs from "fs";
-import getCurrentImages from "./src/getCurrentImages.js";
+import getLocalImages from "./src/getLocalImages.js";
 import compareImages from "./src/compareImages.js";
 import uploadImages from "./src/uploadImages.js";
 // import deleteImages from "./src/deleteImages.js";
+import combineAllImages from "./src/combineAllImages.js";
 import createUploadedManifest from "./src/createUploadedManifest.js";
-import mergeManifests from "./src/tools/mergeManifests.js";
 
 async function createBlankManifestFile() {
   await fs.promises.writeFile('manifest.json', JSON.stringify({}));
@@ -35,27 +35,27 @@ async function runImagePipeline() {
     // Import previous images
     const previousManifest = await importManifestFile("./manifest.json");
 
-    // Get current images
-    const currentImages = await getCurrentImages(process.argv[2]);
+    // Get local images
+    const localManifest = await getLocalImages(process.argv[2]);
 
     // Compare images and return a flat list of filtered images
-    const filteredImages = await compareImages(previousManifest, currentImages);
+    const filteredImages = await compareImages(previousManifest, localManifest);
 
     // Upload images
     const uploadedImages = await uploadFilteredImages(filteredImages.toUpload);
 
     // Delete images
-    // const deletedImages = await deleteImages(filteredImages.toDelete);
+    //const deletedImages = await deleteImages(filteredImages.toDelete);
+
+    // Create list of all images
+    const allUploadedImages = await combineAllImages(uploadedImages, previousManifest);
 
     // Create manifest of images just uploaded
-    const uploadedManifest = await createUploadedManifest(uploadedImages, currentImages);
-
-    // Merge uploadedManifest with currentManifest
-    const currentManifest = await mergeManifests(uploadedManifest, previousManifest);
+    const currentManifest = await createUploadedManifest(allUploadedImages, localManifest);
 
     // Write manifest to file if it has changed
     if (JSON.stringify(currentManifest) !== JSON.stringify(previousManifest)) {
-      await writeManifestToFile(currentManifest, previousManifest);
+      await writeManifestToFile(currentManifest);
     }
 
   } catch (error) {
