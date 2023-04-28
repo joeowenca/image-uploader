@@ -2,7 +2,7 @@ import fs from "fs";
 import getLocalImages from "./src/getLocalImages.js";
 import compareImages from "./src/compareImages.js";
 import uploadImages from "./src/uploadImages.js";
-// import deleteImages from "./src/deleteImages.js";
+import deleteImages from "./src/deleteImages.js";
 import combineAllImages from "./src/combineAllImages.js";
 import createUploadedManifest from "./src/createUploadedManifest.js";
 
@@ -45,7 +45,7 @@ async function runImagePipeline() {
     const uploadedImages = await uploadFilteredImages(filteredImages.toUpload);
 
     // Delete images
-    //const deletedImages = await deleteImages(filteredImages.toDelete);
+    await deleteImages(filteredImages.toDelete);
 
     // Create list of all images
     const allUploadedImages = await combineAllImages(uploadedImages, previousManifest);
