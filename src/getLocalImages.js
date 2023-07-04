@@ -27,6 +27,7 @@ async function getCurrentImages(requestPath) {
           currentCategory.children.push({
             name: file, 
             type: "Image", 
+            date: fileType.mtime,
             id: `${file}-${currentCategory.name}`,
             path: path.join(currentPath, file),
           })

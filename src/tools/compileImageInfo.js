@@ -17,6 +17,7 @@ function compileImageInfo(data, image) {
   return {
     name: data.result.filename,
     type: "Image",
+    date: image.date,
     id: image.id,
     cloudflareId : data.result.id,
     variants: {
