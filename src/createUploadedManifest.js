@@ -2,6 +2,7 @@ async function createUploadedManifest(uploadedImages, currentImages) {
 
   const uploadedManifest = {
     name: currentImages.name,
+    path: "",
     type: "Category",
     children: []
   };
@@ -18,6 +19,7 @@ async function createUploadedManifest(uploadedImages, currentImages) {
       } else {
         const subCategory = {
           name: item.name,
+          path: currentCategory.path.concat("/" + item.name),
           type: "Category",
           children: []
         };
