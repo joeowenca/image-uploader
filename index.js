@@ -16,7 +16,7 @@ async function createBlankManifestFile() {
 }
 
 async function importManifestFile(filePath) {
-  const manifest = await import(filePath, { assert: { type: "json" } });
+  const manifest = await import(filePath, { with: { type: "json" } });
   return manifest.default;
 }
 
@@ -31,7 +31,7 @@ async function writeManifestToFile(currentManifest) {
 }
 
 async function uploadToDatabase(manifest) {
-  const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  const serviceAccount = (await import("./serviceAccountKey.json", { with: { type: "json" } })).default;
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
